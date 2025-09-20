@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acta Digital - Calavera C.F.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+        
+        .tab.active {
+            background: #1d4ed8;
+            box-shadow: 0 4px 15px rgba(29, 78, 216, 0.4);
+        }
+        
+        .tab-content {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .form-row input, .form-row select, .form-row textarea {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .timer {
+            background: #1f2937;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-controls {
+            margin-top: 15px;
+        }
+        
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .player-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #6366f1;
+        }
+        
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .player-number {
+            background: #6366f1;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .player-times {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        
+        .time-entry {
+            background: #f3f4f6;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+        }
+        
+        .observations {
+            margin-top: 10px;
+        }
+        
+        .observation {
+            background: #fef3c7;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 12px;
+            border-left: 3px solid #f59e0b;
+        }
+        
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .summary-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+        
+        .plantilla-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        
+        .plantilla-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .plantilla-item:last-child {
+            border-bottom: none;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .parte-selector {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .parte-btn {
+            padding: 10px 20px;
+            border: 2px solid #6366f1;
+            background: white;
+            color: #6366f1;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .parte-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-row input,
+            .form-row select,
+            .form-row textarea {
+                width: 100%;
+            }
+            
+            .players-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-times {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .import-export {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚽ Acta Digital - Calavera C.F.</h1>
+            <div class="form-row">
+                <input type="date" id="fecha" placeholder="Fecha">
+                <input type="text" id="rival" placeholder="Rival">
+                <input type="text" id="sede" placeholder="Sede">
+                <input type="text" id="categoria" placeholder="Categoría" value="Juvenil 4ª">
+                <button class="btn btn-danger" onclick="nuevaActa()">🆕 Nueva Acta</button>
+            </div>
+            <div class="form-row">
+                <label>Minutos por parte:</label>
+                <input type="number" id="minutosParte" value="35" min="1" max="60">
+                <label style="margin-left: 20px;">
+                    <input type="checkbox" id="autoGuardado" checked> Auto-guardar datos
+                </label>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('acta')">📝 Acta</button>
+            <button class="tab" onclick="showTab('plantilla')">👥 Plantilla</button>
+            <button class="tab" onclick="showTab('resumen')">📊 Resumen</button>
+            <button class="tab" onclick="showTab('importar')">📁 Importar/Exportar</button>
+        </div>
+
+        <!-- TAB ACTA -->
+        <div id="acta" class="tab-content active">
+            <div class="timer">
+                <div id="timerDisplay">00:00</div>
+                <div id="parteDisplay">Parte 1</div>
+                <div class="timer-controls">
+                    <button class="btn btn-success" onclick="startTimer()">▶️ Iniciar</button>
+                    <button class="btn btn-warning" onclick="pauseTimer()">⏸️ Pausar</button>
+                    <button class="btn" onclick="resetTimer()">🔄 Reset</button>
+                </div>
+                <div class="parte-selector">
+                    <button class="parte-btn active" onclick="setParte(1)">Parte 1</button>
+                    <button class="parte-btn" onclick="setParte(2)">Parte 2</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h3>Añadir Jugador al Acta</h3>
+                <div class="form-row">
+                    <input type="number" id="newDorsal" placeholder="Dorsal" min="1" max="99">
+                    <input type="text" id="newName" placeholder="Nombre del jugador">
+                    <button class="btn" onclick="addPlayer()">➕ Añadir</button>
+                </div>
+            </div>
+
+            <div class="players-grid" id="playersGrid">
+                <!-- Jugadores se añaden dinámicamente -->
+            </div>
+        </div>
+
+        <!-- TAB PLANTILLA -->
+        <div id="plantilla" class="tab-content">
+            <h3>Gestión de Plantilla</h3>
+            
+            <div class="form-group">
+                <h4>Añadir a Plantilla</h4>
+                <div class="form-row">
+                    <input type="number" id="plantillaDorsal" placeholder="Dorsal" min="1" max="99">
+                    <input type="text" id="plantillaNombre" placeholder="Nombre">
+                    <button class="btn" onclick="addToPlantilla()">➕ Añadir</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h4>Seleccionar Convocados</h4>
+                <div class="form-row">
+                    <button class="btn btn-small" onclick="selectAllPlantilla()">✅ Seleccionar Todo</button>
+                    <button class="btn btn-small" onclick="clearSelectionPlantilla()">❌ Limpiar Selección</button>
+                    <button class="btn btn-success" onclick="addSelectedToActa()">➕ Añadir Seleccionados</button>
+                    <button class="btn btn-warning" onclick="replaceActaWithSelected()">🔄 Sustituir Acta</button>
+                </div>
+            </div>
+
+            <div class="plantilla-list" id="plantillaList">
+                <!-- Plantilla se carga dinámicamente -->
+            </div>
+
+            <div class="import-export">
+                <h4>Importar/Exportar Plantilla</h4>
+                <input type="file" id="importPlantillaFile" accept=".json,.csv,.txt" style="display: none;" onchange="handleImportPlantillaFile(event)">
+                <button class="btn btn-small" onclick="document.getElementById('importPlantillaFile').click()">📁 Importar</button>
+                <button class="btn btn-small" onclick="exportPlantilla('json')">💾 Exportar JSON</button>
+                <button class="btn btn-small" onclick="exportPlantilla('csv')">📄 Exportar CSV</button>
+                <div id="importStatus" style="margin-top: 10px; font-size: 12px;"></div>
+            </div>
+        </div>
+
+        <!-- TAB RESUMEN -->
+        <div id="resumen" class="tab-content">
+            <h3>Resumen del Partido</h3>
+            <div id="matchSummary"></div>
+                            <table class="summary-table" id="summaryTable">
+                <thead>
+                    <tr>
+                        <th>Dorsal</th>
+                        <th>Nombre</th>
+                        <th>Min P1</th>
+                        <th>Min P2</th>
+                        <th>Total</th>
+                        <th>Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody id="summaryTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TAB IMPORTAR/EXPORTAR -->
+        <div id="importar" class="tab-content">
+            <h3>Importar/Exportar Acta</h3>
+            
+            <div class="import-export">
+                <h4>Importar Acta</h4>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <button class="btn" onclick="document.getElementById('importFile').click()">📁 Importar JSON</button>
+            </div>
+
+            <div class="import-export">
+                <h4>Exportar Acta</h4>
+                <button class="btn btn-success" onclick="exportData('csv')">📄 Exportar CSV</button>
+                <button class="btn" onclick="exportData('json')">💾 Exportar JSON</button>
+            </div>
+
+            <div class="import-export">
+                <h4>Gestión de Datos</h4>
+                <button class="btn btn-danger" onclick="limpiarTodosLosDatos()">🗑️ Eliminar Todo</button>
+                <small style="display: block; margin-top: 5px; color: #666;">
+                    Elimina acta actual, plantilla y todas las configuraciones
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let players = [];
+        let plantilla = [];
+        let timer = 0;
+        let timerInterval = null;
+        let isTimerRunning = false;
+        let currentParte = 1;
+
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            loadPlantilla();
+            updateDisplay();
+            
+            // Event listeners para importar archivos
+            document.getElementById('importFile').addEventListener('change', handleImportFile);
+            document.getElementById('importPlantillaFile').addEventListener('change', handleImportPlantillaFile);
+        });
+
+        // Gestión de pestañas
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'resumen') {
+                updateSummary();
+            }
+        }
+
+        // Timer functions
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                timerInterval = setInterval(() => {
+                    timer++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timer = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timer / 60);
+            const seconds = timer % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function setParte(parte) {
+            // Si cambiamos de parte 1 a parte 2, cerrar automáticamente los periodos de parte 1
+            if (currentParte === 1 && parte === 2) {
+                const minutosParte = parseInt(document.getElementById('minutosParte').value) || 35;
+                const maxTimeForPart1 = `${minutosParte}:00`;
+                
+                players.forEach(player => {
+                    // Verificar si el jugador está en campo al final de la parte 1
+                    let inField = false;
+                    for (let entry of player.entries) {
+                        if (entry.parte === 1) {
+                            if (entry.type === 'in') inField = true;
+                            if (entry.type === 'out') inField = false;
+                        }
+                    }
+                    
+                    // Si está en campo y no tiene entrada de parte 2, añadir salida ficticia al final de parte 1
+                    if (inField) {
+                        const hasParteEntry = player.entries.some(e => e.parte === 2);
+                        if (!hasParteEntry) {
+                            // Añadir salida al final de parte 1
+                            player.entries.push({
+                                type: 'out',
+                                time: maxTimeForPart1,
+                                parte: 1
+                            });
+                            // Añadir entrada al inicio de parte 2
+                            player.entries.push({
+                                type: 'in',
+                                time: '00:00',
+                                parte: 2
+                            });
+                        }
+                    }
+                });
+                
+                saveData();
+                updateDisplay();
+            }
+            
+            currentParte = parte;
+            document.querySelectorAll('.parte-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('parteDisplay').textContent = `Parte ${parte}`;
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            timer = 0;
+            updateTimerDisplay();
+        }
+
+        function getCurrentTime() {
+            const minutes = Math.floor(timer / 60);
+            const seconds = timer % 60;
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Gestión de jugadores
+        function addPlayer() {
+            const dorsal = parseInt(document.getElementById('newDorsal').value);
+            const name = document.getElementById('newName').value.trim();
+            
+            if (!dorsal || !name) {
+                alert('Por favor, introduce dorsal y nombre');
+                return;
+            }
+            
+            if (players.find(p => p.dorsal === dorsal)) {
+                alert('Ya existe un jugador con ese dorsal');
+                return;
+            }
+            
+            const player = {
+                dorsal: dorsal,
+                name: name,
+                entries: [],
+                observations: []
+            };
+            
+            players.push(player);
+            players.sort((a, b) => a.dorsal - b.dorsal);
+            
+            document.getElementById('newDorsal').value = '';
+            document.getElementById('newName').value = '';
+            
+            updateDisplay();
+            saveData();
+        }
+
+        function removePlayer(dorsal) {
+            if (confirm('¿Eliminar jugador del acta?')) {
+                players = players.filter(p => p.dorsal !== dorsal);
+                updateDisplay();
+                saveData();
+            }
+        }
+
+        function togglePlayerEntry(dorsal) {
+            const player = players.find(p => p.dorsal === dorsal);
+            if (!player) return;
+            
+            const isInField = isPlayerInField(player);
+            const currentTime = getCurrentTime();
+            
+            if (isInField) {
+                // Jugador sale del campo
+                player.entries.push({
+                    type: 'out',
+                    time: currentTime,
+                    parte: currentParte
+                });
+            } else {
+                // Jugador entra al campo
+                player.entries.push({
+                    type: 'in',
+                    time: currentTime,
+                    parte: currentParte
+                });
+            }
+            
+            updateDisplay();
+            saveData();
+        }
+
+        function isPlayerInField(player) {
+            let inField = false;
+            for (let entry of player.entries) {
+                if (entry.type === 'in') inField = true;
+                if (entry.type === 'out') inField = false;
+            }
+            return inField;
+        }
+
+        function editPlayerTime(dorsal, index) {
+            const player = players.find(p => p.dorsal === dorsal);
+            if (!player || !player.entries[index]) return;
+            
+            const newTime = prompt('Nuevo tiempo (MM:SS):', player.entries[index].time);
+            if (newTime && /^\d{1,2}:\d{2}$/.test(newTime)) {
+                player.entries[index].time = newTime;
+                updateDisplay();
+                saveData();
+            }
+        }
+
+        function addObservation(dorsal) {
+            const player = players.find(p => p.dorsal === dorsal);
+            if (!player) return;
+            
+            const observation = prompt('Observación (gol, TA, TR, etc.):');
+            if (observation && observation.trim()) {
+                player.observations.push({
+                    text: observation.trim(),
+                    time: getCurrentTime(),
+                    parte: currentParte
+                });
+                updateDisplay();
+                saveData();
+            }
+        }
+
+        function removeObservation(dorsal, index) {
+            const player = players.find(p => p.dorsal === dorsal);
+            if (player && confirm('¿Eliminar observación?')) {
+                player.observations.splice(index, 1);
+                updateDisplay();
+                saveData();
+            }
+        }
+
+        // Cálculo de minutos jugados - SIMPLIFICADO
+        function calculatePlayedMinutes(player) {
+            let minutesParte1 = 0;
+            let minutesParte2 = 0;
+            
+            // Separar entradas por partes y procesarlas independientemente
+            const entriesParte1 = player.entries.filter(e => e.parte === 1);
+            const entriesParte2 = player.entries.filter(e => e.parte === 2);
+            
+            // Calcular parte 1
+            let inTime = null;
+            for (let entry of entriesParte1) {
+                const [minutes, seconds] = entry.time.split(':').map(Number);
+                const timeInSeconds = minutes * 60 + seconds;
+                
+                if (entry.type === 'in') {
+                    inTime = timeInSeconds;
+                } else if (entry.type === 'out' && inTime !== null) {
+                    minutesParte1 += (timeInSeconds - inTime) / 60;
+                    inTime = null;
+                }
+            }
+            
+            // Calcular parte 2
+            inTime = null;
+            for (let entry of entriesParte2) {
+                const [minutes, seconds] = entry.time.split(':').map(Number);
+                const timeInSeconds = minutes * 60 + seconds;
+                
+                if (entry.type === 'in') {
+                    inTime = timeInSeconds;
+                } else if (entry.type === 'out' && inTime !== null) {
+                    minutesParte2 += (timeInSeconds - inTime) / 60;
+                    inTime = null;
+                }
+            }
+            
+            // Si sigue en campo en la parte actual
+            if (inTime !== null && currentParte === 2) {
+                minutesParte2 += (timer - inTime) / 60;
+            }
+            
+            return {
+                parte1: Math.max(0, Math.round(minutesParte1)),
+                parte2: Math.max(0, Math.round(minutesParte2)),
+                total: Math.max(0, Math.round(minutesParte1 + minutesParte2))
+            };
+        }
+
+        // Actualizar visualización
+        function updateDisplay() {
+            const grid = document.getElementById('playersGrid');
+            grid.innerHTML = '';
+            
+            players.forEach(player => {
+                const isInField = isPlayerInField(player);
+                const playedMinutes = calculatePlayedMinutes(player);
+                
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.innerHTML = `
+                    <div class="player-header">
+                        <div class="player-number">${player.dorsal}</div>
+                        <h4>${player.name}</h4>
+                        <button class="btn btn-danger btn-small" onclick="removePlayer(${player.dorsal})">🗑️</button>
+                    </div>
+                    
+                    <div class="form-row">
+                        <button class="btn ${isInField ? 'btn-warning' : 'btn-success'}" 
+                                onclick="togglePlayerEntry(${player.dorsal})">
+                            ${isInField ? '🔄 Sale' : '▶️ Entra'}
+                        </button>
+                        <button class="btn btn-small" onclick="addObservation(${player.dorsal})">
+                            📝 Observación
+                        </button>
+                        <span><strong>${playedMinutes.total} min</strong></span>
+                    </div>
+                    
+                    <div class="player-times">
+                        ${player.entries.map((entry, i) => `
+                            <div class="time-entry" onclick="editPlayerTime(${player.dorsal}, ${i})">
+                                ${entry.type === 'in' ? '▶️' : '🔄'} ${entry.time} (P${entry.parte})
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="observations">
+                        ${player.observations.map((obs, i) => `
+                            <div class="observation" onclick="removeObservation(${player.dorsal}, ${i})">
+                                <strong>${obs.time} (P${obs.parte}):</strong> ${obs.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                grid.appendChild(playerCard);
+            });
+        }
+
+        // Gestión de plantilla
+        function loadPlantilla() {
+            const saved = localStorage.getItem('futbol_plantilla');
+            if (saved) {
+                plantilla = JSON.parse(saved);
+            }
+            updatePlantillaDisplay();
+        }
+
+        function saveData() {
+            // Solo guardar si el auto-guardado está activado
+            const autoGuardado = document.getElementById('autoGuardado').checked;
+            if (!autoGuardado) return;
+            
+            const data = {
+                players: players,
+                timer: timer,
+                currentParte: currentParte,
+                matchInfo: {
+                    fecha: document.getElementById('fecha').value,
+                    rival: document.getElementById('rival').value,
+                    sede: document.getElementById('sede').value,
+                    categoria: document.getElementById('categoria').value,
+                    minutosParte: document.getElementById('minutosParte').value
+                }
+            };
+            localStorage.setItem('futbol_acta', JSON.stringify(data));
+        }
+
+        function loadData() {
+            // Solo cargar si el auto-guardado está activado
+            const autoGuardado = document.getElementById('autoGuardado');
+            if (!autoGuardado.checked) return;
+            
+            const saved = localStorage.getItem('futbol_acta');
+            if (saved) {
+                const data = JSON.parse(saved);
+                players = data.players || [];
+                timer = data.timer || 0;
+                currentParte = data.currentParte || 1;
+                
+                if (data.matchInfo) {
+                    document.getElementById('fecha').value = data.matchInfo.fecha || '';
+                    document.getElementById('rival').value = data.matchInfo.rival || '';
+                    document.getElementById('sede').value = data.matchInfo.sede || '';
+                    document.getElementById('categoria').value = data.matchInfo.categoria || 'Juvenil 4ª';
+                    document.getElementById('minutosParte').value = data.matchInfo.minutosParte || 35;
+                }
+                
+                updateTimerDisplay();
+                setParte(currentParte);
+            }
+        }
+
+        function nuevaActa() {
+            if (confirm('¿Crear nueva acta? Se perderán todos los datos actuales del partido.')) {
+                // Resetear todos los datos del acta
+                players = [];
+                timer = 0;
+                currentParte = 1;
+                
+                // Limpiar formularios
+                document.getElementById('fecha').value = '';
+                document.getElementById('rival').value = '';
+                document.getElementById('sede').value = '';
+                document.getElementById('categoria').value = 'Juvenil 4ª';
+                document.getElementById('minutosParte').value = '35';
+                
+                // Resetear timer
+                pauseTimer();
+                updateTimerDisplay();
+                setParte(1);
+                
+                // Actualizar pantalla
+                updateDisplay();
+                updateSummary();
+                
+                // Limpiar datos guardados
+                localStorage.removeItem('futbol_acta');
+                
+                alert('✅ Nueva acta creada. Datos anteriores eliminados.');
+            }
+        }
+
+        function limpiarTodosLosDatos() {
+            if (confirm('⚠️ ¿ELIMINAR TODOS LOS DATOS? Esto borrará:\n\n• El acta actual\n• La plantilla guardada\n• Todas las configuraciones\n\n¿Estás seguro?')) {
+                // Eliminar todo del almacenamiento
+                localStorage.removeItem('futbol_acta');
+                localStorage.removeItem('futbol_plantilla');
+                
+                // Resetear variables
+                players = [];
+                plantilla = [];
+                timer = 0;
+                currentParte = 1;
+                
+                // Limpiar formularios
+                document.getElementById('fecha').value = '';
+                document.getElementById('rival').value = '';
+                document.getElementById('sede').value = '';
+                document.getElementById('categoria').value = 'Juvenil 4ª';
+                document.getElementById('minutosParte').value = '35';
+                document.getElementById('autoGuardado').checked = true;
+                
+                // Resetear timer
+                pauseTimer();
+                updateTimerDisplay();
+                setParte(1);
+                
+                // Actualizar todas las pantallas
+                updateDisplay();
+                updatePlantillaDisplay();
+                updateSummary();
+                
+                alert('🗑️ Todos los datos han sido eliminados. Aplicación reseteada completamente.');
+            }
+        }
+
+        function addToPlantilla() {
+            const dorsal = parseInt(document.getElementById('plantillaDorsal').value);
+            const nombre = document.getElementById('plantillaNombre').value.trim();
+            
+            if (!dorsal || !nombre) {
+                alert('Introduce dorsal y nombre');
+                return;
+            }
+            
+            if (plantilla.find(p => p.dorsal === dorsal)) {
+                alert('Ya existe un jugador con ese dorsal en la plantilla');
+                return;
+            }
+            
+            plantilla.push({ dorsal, nombre, convocado: false });
+            plantilla.sort((a, b) => a.dorsal - b.dorsal);
+            
+            document.getElementById('plantillaDorsal').value = '';
+            document.getElementById('plantillaNombre').value = '';
+            
+            updatePlantillaDisplay();
+            savePlantilla();
+        }
+
+        function savePlantilla() {
+            localStorage.setItem('futbol_plantilla', JSON.stringify(plantilla));
+        }
+
+        function updatePlantillaDisplay() {
+            const list = document.getElementById('plantillaList');
+            list.innerHTML = '';
+            
+            plantilla.forEach((player, index) => {
+                const item = document.createElement('div');
+                item.className = 'plantilla-item';
+                item.innerHTML = `
+                    <input type="checkbox" class="checkbox" ${player.convocado ? 'checked' : ''} 
+                           onchange="toggleConvocado(${index})">
+                    <div class="player-number">${player.dorsal}</div>
+                    <span style="flex: 1">${player.nombre}</span>
+                    <button class="btn btn-danger btn-small" onclick="removePlantillaPlayer(${index})">🗑️</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function toggleConvocado(index) {
+            plantilla[index].convocado = !plantilla[index].convocado;
+            savePlantilla();
+        }
+
+        function removePlantillaPlayer(index) {
+            if (confirm('¿Eliminar de la plantilla?')) {
+                plantilla.splice(index, 1);
+                updatePlantillaDisplay();
+                savePlantilla();
+            }
+        }
+
+        function selectAllPlantilla() {
+            plantilla.forEach(p => p.convocado = true);
+            updatePlantillaDisplay();
+            savePlantilla();
+        }
+
+        function clearSelectionPlantilla() {
+            plantilla.forEach(p => p.convocado = false);
+            updatePlantillaDisplay();
+            savePlantilla();
+        }
+
+        function addSelectedToActa() {
+            const selected = plantilla.filter(p => p.convocado);
+            selected.forEach(p => {
+                if (!players.find(player => player.dorsal === p.dorsal)) {
+                    players.push({
+                        dorsal: p.dorsal,
+                        name: p.nombre,
+                        entries: [],
+                        observations: []
+                    });
+                }
+            });
+            players.sort((a, b) => a.dorsal - b.dorsal);
+            updateDisplay();
+            saveData();
+        }
+
+        function replaceActaWithSelected() {
+            const selected = plantilla.filter(p => p.convocado);
+            players = selected.map(p => ({
+                dorsal: p.dorsal,
+                name: p.nombre,
+                entries: [],
+                observations: []
+            }));
+            updateDisplay();
+            saveData();
+        }
+
+        // Resumen
+        function updateSummary() {
+            const matchInfo = {
+                fecha: document.getElementById('fecha').value,
+                rival: document.getElementById('rival').value,
+                sede: document.getElementById('sede').value,
+                categoria: document.getElementById('categoria').value
+            };
+            
+            const summaryDiv = document.getElementById('matchSummary');
+            summaryDiv.innerHTML = `
+                <p><strong>Fecha:</strong> ${matchInfo.fecha || 'No especificada'}</p>
+                <p><strong>Rival:</strong> ${matchInfo.rival || 'No especificado'}</p>
+                <p><strong>Sede:</strong> ${matchInfo.sede || 'No especificada'}</p>
+                <p><strong>Categoría:</strong> ${matchInfo.categoria || 'No especificada'}</p>
+            `;
+            
+            const tbody = document.getElementById('summaryTableBody');
+            tbody.innerHTML = '';
+            
+            players.forEach(player => {
+                const playedMinutes = calculatePlayedMinutes(player);
+                const observations = player.observations.map(obs => 
+                    `${obs.time} (P${obs.parte}): ${obs.text}`
+                ).join('; ');
+                
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = player.dorsal;
+                row.insertCell(1).textContent = player.name;
+                row.insertCell(2).textContent = playedMinutes.parte1;
+                row.insertCell(3).textContent = playedMinutes.parte2;
+                row.insertCell(4).textContent = playedMinutes.total;
+                row.insertCell(5).textContent = observations;
+            });
+        }
+
+        // Importar/Exportar
+        function exportData(format) {
+            const matchInfo = {
+                fecha: document.getElementById('fecha').value,
+                rival: document.getElementById('rival').value,
+                sede: document.getElementById('sede').value,
+                categoria: document.getElementById('categoria').value,
+                minutosParte: document.getElementById('minutosParte').value
+            };
+            
+            if (format === 'csv') {
+                let csv = 'Dorsal;Nombre;Min Parte 1;Min Parte 2;Total Minutos;Observaciones\n';
+                players.forEach(player => {
+                    const playedMinutes = calculatePlayedMinutes(player);
+                    const observations = player.observations.map(obs => 
+                        `${obs.time} (P${obs.parte}): ${obs.text}`
+                    ).join(' | ');
+                    csv += `${player.dorsal};${player.name};${playedMinutes.parte1};${playedMinutes.parte2};${playedMinutes.total};${observations}\n`;
+                });
+                
+                const header = `Fecha: ${matchInfo.fecha}\nRival: ${matchInfo.rival}\nSede: ${matchInfo.sede}\nCategoría: ${matchInfo.categoria}\n\n`;
+                csv = header + csv;
+                
+                downloadFile(csv, `acta_${matchInfo.fecha}_${matchInfo.rival}.csv`, 'text/csv');
+            } else if (format === 'json') {
+                const data = {
+                    matchInfo,
+                    players,
+                    timer,
+                    currentParte,
+                    exportDate: new Date().toISOString()
+                };
+                
+                downloadFile(JSON.stringify(data, null, 2), `acta_${matchInfo.fecha}_${matchInfo.rival}.json`, 'application/json');
+            }
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function handleImportFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (confirm('¿Cargar esta acta? Se perderán los datos actuales.')) {
+                        players = data.players || [];
+                        timer = data.timer || 0;
+                        currentParte = data.currentParte || 1;
+                        
+                        if (data.matchInfo) {
+                            document.getElementById('fecha').value = data.matchInfo.fecha || '';
+                            document.getElementById('rival').value = data.matchInfo.rival || '';
+                            document.getElementById('sede').value = data.matchInfo.sede || '';
+                            document.getElementById('categoria').value = data.matchInfo.categoria || '';
+                            document.getElementById('minutosParte').value = data.matchInfo.minutosParte || 35;
+                        }
+                        
+                        updateTimerDisplay();
+                        setParte(currentParte);
+                        updateDisplay();
+                        saveData();
+                        
+                        alert('Acta cargada correctamente');
+                    }
+                } catch (error) {
+                    alert('Error al cargar el archivo: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Gestión de plantilla - Import/Export
+        function exportPlantilla(format) {
+            if (format === 'csv') {
+                let csv = 'Dorsal;Nombre;Convocado\n';
+                plantilla.forEach(player => {
+                    csv += `${player.dorsal};${player.nombre};${player.convocado ? 'Sí' : 'No'}\n`;
+                });
+                downloadFile(csv, 'plantilla.csv', 'text/csv');
+            } else if (format === 'json') {
+                downloadFile(JSON.stringify(plantilla, null, 2), 'plantilla.json', 'application/json');
+            }
+        }
+
+        function handleImportPlantillaFile(event) {
+            const file = event.target.files[0];
+            const statusDiv = document.getElementById('importStatus');
+            
+            if (!file) {
+                statusDiv.innerHTML = '<span style="color: red;">❌ No se seleccionó archivo</span>';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<span style="color: blue;">⏳ Procesando archivo...</span>';
+            console.log('Archivo seleccionado:', file.name, 'Tipo:', file.type);
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const content = e.target.result;
+                    console.log('Contenido leído:', content.substring(0, 200) + '...');
+                    
+                    if (file.name.toLowerCase().endsWith('.json')) {
+                        const data = JSON.parse(content);
+                        importPlantillaFromData(data);
+                    } else if (file.name.toLowerCase().endsWith('.csv') || file.name.toLowerCase().endsWith('.txt')) {
+                        // Procesar CSV
+                        const lines = content.split(/\r?\n/).filter(line => line.trim());
+                        console.log('Líneas encontradas:', lines.length);
+                        console.log('Primera línea:', lines[0]);
+                        
+                        if (lines.length < 2) {
+                            statusDiv.innerHTML = '<span style="color: red;">❌ El archivo debe tener al menos 2 líneas (cabecera + datos)</span>';
+                            return;
+                        }
+                        
+                        const headers = lines[0].toLowerCase().split(';').map(h => h.trim());
+                        console.log('Headers procesados:', headers);
+                        
+                        // Buscar índices de columnas
+                        let dorsalIndex = -1;
+                        let nombreIndex = -1;
+                        let convocadoIndex = -1;
+                        
+                        headers.forEach((header, index) => {
+                            if (header.includes('dorsal') || header.includes('numero') || header === 'dorsal') {
+                                dorsalIndex = index;
+                            }
+                            if (header.includes('nombre') || header.includes('name') || header === 'nombre') {
+                                nombreIndex = index;
+                            }
+                            if (header.includes('convocado')) {
+                                convocadoIndex = index;
+                            }
+                        });
+                        
+                        console.log('Índices encontrados - Dorsal:', dorsalIndex, 'Nombre:', nombreIndex, 'Convocado:', convocadoIndex);
+                        
+                        if (dorsalIndex === -1 || nombreIndex === -1) {
+                            statusDiv.innerHTML = '<span style="color: red;">❌ No se encontraron columnas "Dorsal" y "Nombre"</span>';
+                            return;
+                        }
+                        
+                        const data = [];
+                        for (let i = 1; i < lines.length; i++) {
+                            const values = lines[i].split(';').map(v => v.trim());
+                            console.log(`Línea ${i}:`, values);
+                            
+                            if (values.length < Math.max(dorsalIndex, nombreIndex) + 1) {
+                                console.warn(`Línea ${i} no tiene suficientes columnas`);
+                                continue;
+                            }
+                            
+                            const dorsal = parseInt(values[dorsalIndex]) || 0;
+                            const nombre = values[nombreIndex] || '';
+                            let convocado = false;
+                            
+                            if (convocadoIndex >= 0 && values[convocadoIndex]) {
+                                const convocadoValue = values[convocadoIndex].toLowerCase();
+                                convocado = convocadoValue === 'sí' || convocadoValue === 'si' || 
+                                           convocadoValue === 'yes' || convocadoValue === '1' || 
+                                           convocadoValue === 'true';
+                            }
+                            
+                            if (dorsal > 0 && nombre) {
+                                data.push({ dorsal, nombre, convocado });
+                            } else {
+                                console.warn(`Línea ${i} ignorada - Dorsal: ${dorsal}, Nombre: "${nombre}"`);
+                            }
+                        }
+                        
+                        console.log('Datos procesados:', data);
+                        
+                        if (data.length === 0) {
+                            statusDiv.innerHTML = '<span style="color: red;">❌ No se encontraron datos válidos</span>';
+                            return;
+                        }
+                        
+                        statusDiv.innerHTML = `<span style="color: green;">✅ ${data.length} jugadores encontrados</span>`;
+                        importPlantillaFromData(data);
+                    } else {
+                        statusDiv.innerHTML = '<span style="color: red;">❌ Formato no soportado. Use .csv o .json</span>';
+                    }
+                } catch (error) {
+                    console.error('Error al importar:', error);
+                    statusDiv.innerHTML = '<span style="color: red;">❌ Error: ' + error.message + '</span>';
+                }
+                
+                // Limpiar el input file
+                event.target.value = '';
+            };
+            
+            reader.onerror = function() {
+                statusDiv.innerHTML = '<span style="color: red;">❌ Error al leer el archivo</span>';
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function importPlantillaFromData(data) {
+            console.log('Intentando importar datos:', data);
+            
+            if (!Array.isArray(data) || data.length === 0) {
+                alert('No se encontraron datos válidos para importar');
+                return;
+            }
+            
+            if (confirm(`¿Reemplazar la plantilla actual? Se importarán ${data.length} jugadores.`)) {
+                // Normalizar datos importados
+                const newPlantilla = data.map(player => ({
+                    dorsal: parseInt(player.dorsal || player.numero) || 0,
+                    nombre: (player.nombre || player.name || '').trim(),
+                    convocado: Boolean(player.convocado)
+                })).filter(p => p.dorsal > 0 && p.nombre);
+                
+                // Verificar duplicados por dorsal
+                const dorsales = new Set();
+                const plantillaFinal = [];
+                
+                newPlantilla.forEach(player => {
+                    if (!dorsales.has(player.dorsal)) {
+                        dorsales.add(player.dorsal);
+                        plantillaFinal.push(player);
+                    } else {
+                        console.warn(`Jugador con dorsal ${player.dorsal} duplicado, se omite`);
+                    }
+                });
+                
+                plantilla = plantillaFinal;
+                plantilla.sort((a, b) => a.dorsal - b.dorsal);
+                
+                updatePlantillaDisplay();
+                savePlantilla();
+                
+                alert(`Plantilla importada correctamente: ${plantilla.length} jugadores`);
+                console.log('Plantilla final:', plantilla);
+            }
+        }
+
+        // Auto-save cuando se cambian los datos del partido
+        document.getElementById('fecha').addEventListener('change', saveData);
+        document.getElementById('rival').addEventListener('change', saveData);
+        document.getElementById('sede').addEventListener('change', saveData);
+        document.getElementById('categoria').addEventListener('change', saveData);
+        document.getElementById('minutosParte').addEventListener('change', saveData);
+    </script>
+</body>
+</html>
