@@ -481,16 +481,11 @@ async function requestWakeLock() {
             wakeLock = await navigator.wakeLock.request('screen');
             wakeLock.addEventListener('release', () => { wakeLock = null; });
         }
-    } catch (e) {
-        wakeLock = null; // not supported or rejected
-    }
+    } catch (e) { wakeLock = null; }
 }
 function releaseWakeLock() {
-    try {
-        if (wakeLock) { wakeLock.release(); wakeLock = null; }
-    } catch (_) {}
+    try { if (wakeLock) { wakeLock.release(); wakeLock = null; } } catch (_) {}
 }
-
  // Tiempo base acumulado cuando se pausa
 
         // Cargar datos al iniciar
@@ -513,7 +508,7 @@ function reengageTimerAfterResume() {
         if (!timerInterval) {
             timerInterval = setInterval(updateTimerFromRealTime, 100);
         }
-        requestWakeLock();
+        try { requestWakeLock(); } catch(_) {}
     }
 }
 
@@ -521,10 +516,7 @@ document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         try { if (typeof saveData === 'function') saveData(); } catch (_) {}
         try { releaseWakeLock(); } catch(_) {}
-        if (timerInterval) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        }
+        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
     } else {
         reengageTimerAfterResume();
     }
@@ -548,7 +540,6 @@ window.addEventListener('beforeunload', () => {
 });
 
 
-
         // Gestión de pestañas
         function showTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -566,9 +557,9 @@ window.addEventListener('beforeunload', () => {
         function startTimer() {
             if (!isTimerRunning) {
                 isTimerRunning = true;
+                
                 try { requestWakeLock(); } catch(_) {}
-
-                timerStartTime = Date.now();
+timerStartTime = Date.now();
                 timerInterval = setInterval(updateTimerFromRealTime, 100); // Actualiza cada 100ms para mayor precisión
             }
         }
@@ -576,10 +567,15 @@ window.addEventListener('beforeunload', () => {
         function pauseTimer() {
             if (isTimerRunning) {
                 isTimerRunning = false;
+                
                 try { releaseWakeLock(); } catch(_) {}
-
-                // Guardar el tiempo acumulado hasta ahora
-                timerBaseTime = timer;
+// Guardar el tiempo acumulado hasta ahora (corrige congelación en iOS)
+                if (timerStartTime) {
+                    const elapsedTime = Math.floor((Date.now() - timerStartTime) / 1000);
+                    timerBaseTime = timerBaseTime + elapsedTime;
+                } else {
+                    timerBaseTime = timer;
+                }
                 timerStartTime = null;
                 
                 if (timerInterval) {
@@ -619,7 +615,7 @@ window.addEventListener('beforeunload', () => {
                 // Pausar reloj para fijar el corte exacto de P1
                 if (typeof isTimerRunning !== 'undefined' && isTimerRunning && typeof pauseTimer === 'function') { pauseTimer(); }
 const minutosParte = parseInt(document.getElementById('minutosParte').value) || 35;
-// Usar el tiempo REAL del reloj al cerrar P1
+                // Usar el tiempo REAL del reloj al cerrar P1
 const endSeconds = (typeof timer === 'number' ? timer : 0);
 const mm = Math.floor(endSeconds / 60).toString().padStart(2,'0');
 const ss = (endSeconds % 60).toString().padStart(2,'0');
